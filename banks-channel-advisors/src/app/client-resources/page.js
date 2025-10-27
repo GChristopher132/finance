@@ -101,7 +101,7 @@ export default function ClientResourcesPage() {
             title="Charles Schwab"
             description="(Login to the Charles Schwab website to view your Schwab accounts, download monthly statements, tax reports, trade confirmations, etc)"
             buttonText="Schwab Login"
-            buttonHref="https://www.schwab.com/"
+            buttonHref="https://client.schwab.com/Areas/Access/Login"
             imageUrl="https://upload.wikimedia.org/wikipedia/commons/4/4b/Charles_Schwab_Corporation_logo.svg"
             imageAlt="Charles Schwab logo"
           />
@@ -111,7 +111,7 @@ export default function ClientResourcesPage() {
             title="eMoney"
             description="(Login to the eMoney portal to access your secure file sharing vault, view your net worth summary, cash flow report, port, investment allocations, tc)"
             buttonText="eMoney Login"
-            buttonHref="https://www.emoneyadvisor.com/"
+            buttonHref="https://wealth.emaplan.com/ema/ria/bankschanneladvisors"
             imageUrl="https://emoneyadvisor.com/wp-content/uploads/2023/03/emoney-nav-logo.svg"
             imageAlt="eMoney logo"
           />
