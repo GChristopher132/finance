@@ -71,7 +71,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation - Centered vertically */}
           {/* Removed wrapping div, added self-center h-full back */}
-          <div className="hidden md:flex items-center space-x-6 self-center h-full">
+          <div className="hidden md:flex items-center self-center h-full">
             {navLinks.map((link) => (
               <div key={link.label} className="relative group"> {/* Use group for hover effects */}
                 {link.children ? (
@@ -110,6 +110,15 @@ export default function Navbar() {
                 )}
               </div>
             ))}
+            
+            {/* --- NEW CLIENT RESOURCES BUTTON --- */}
+            <Link
+              href="/client-resources"
+              className="ml-4 rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors duration-200"
+            >
+              Client Resources
+            </Link>
+            {/* --- END NEW BUTTON --- */}
           </div>
 
           {/* Mobile Menu Button - Centered vertically */}
@@ -179,6 +188,17 @@ export default function Navbar() {
               </Link>
             )
           ))}
+          
+          {/* --- NEW CLIENT RESOURCES LINK (MOBILE) --- */}
+          <Link
+            href="/client-resources"
+            className="text-gray-300 hover:text-[#5097C9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+            onClick={() => setIsOpen(false)} // Close menu on click
+          >
+            Client Resources
+          </Link>
+          {/* --- END NEW LINK --- */}
+
         </div>
       </div>
     </nav>
