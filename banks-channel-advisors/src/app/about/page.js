@@ -13,7 +13,7 @@ export default function AboutPage() {
     {
       name: "Andrew Sherman, CFP",
       title: "President",
-      imageSrc: "/images/portrait.heic", // Replace with actual path in /public/images
+      imageSrc: "/images/portrait.png", // Replace with actual path in /public/images
       bio: "With over [X] years of experience, Andrew founded Banks Channel Advisors with a vision to provide personalized, conflict-free financial guidance. [Add more details about experience, qualifications (CFP®, etc.), and passion for helping clients.]",
       email: "andrew@bankschanneladvisors.com", // Replace
       phone: "540-915-2991", // Placeholder Phone
@@ -21,10 +21,10 @@ export default function AboutPage() {
       // linkedin: "#" // Optional: Add LinkedIn profile URL
     },
     {
-      name: "Advisor Two Name",
-      title: "Financial Advisor",
-      imageSrc: "/images/banks-channel-logo.png", // Replace with actual path in /public/images
-      bio: "Advisor Two brings [Y] years of expertise in [specific areas like retirement planning, investment management] to the team. They are committed to building strong client relationships based on trust and clear communication. [Add more details.]",
+      name: "Cowboy",
+      title: "Professional Good Boy",
+      imageSrc: "/images/cowboy2.png", // Replace with actual path in /public/images
+      bio: "Cowboy brings [Y] years of expertise in retrieving ducks to the team. He is committed to building strong client relationships based on trust and clear communication. [Add more details.]",
       email: "advisor.two@bankschanneladvisors.com", // Replace
       phone: "555-123-4568", // Placeholder Phone
       fax: "555-987-6543", // Placeholder Fax (assuming shared fax?)
