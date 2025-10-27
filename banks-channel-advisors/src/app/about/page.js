@@ -13,7 +13,7 @@ export default function AboutPage() {
     {
       name: "Andrew Sherman, CFP",
       title: "President",
-      imageSrc: "/images/banks-channel-logo.png", // Replace with actual path in /public/images
+      imageSrc: "/images/portrait.heic", // Replace with actual path in /public/images
       bio: "With over [X] years of experience, Andrew founded Banks Channel Advisors with a vision to provide personalized, conflict-free financial guidance. [Add more details about experience, qualifications (CFP®, etc.), and passion for helping clients.]",
       email: "andrew@bankschanneladvisors.com", // Replace
       phone: "540-915-2991", // Placeholder Phone
