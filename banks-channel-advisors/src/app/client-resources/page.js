@@ -136,8 +136,8 @@ export default function ClientResourcesPage() {
             <ResourceCard
               title="Schedule a Call"
               description="Use the link below to schedule a call or Zoom meeting with Andrew."
-              buttonText="Schedule with Andy"
-              buttonHref="#" // Add Andy's scheduling link here
+              buttonText="Schedule with Andrew"
+              buttonHref="#" // Add Andrew's scheduling link here
               Icon={CalendarDays}
               targetBlank={true} // Or false if it's not an external link
             />
