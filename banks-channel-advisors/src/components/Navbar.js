@@ -114,7 +114,7 @@ export default function Navbar() {
             {/* --- NEW CLIENT RESOURCES BUTTON --- */}
             <Link
               href="/client-resources"
-              className="ml-4 rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors duration-200"
+              className="ml-4 rounded-md bg-[#5097C9] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#0A437B] focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors duration-200"
             >
               Client Resources
             </Link>
@@ -152,7 +152,7 @@ export default function Navbar() {
       {/* Adjusting pt based on smaller logo height (36px). pt-2 should be enough */}
       <div
         className={`md:hidden bg-[#0A2342] overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-96 opacity-100 pt-2' : 'max-h-0 opacity-0 pt-0' // Adjust max-h if needed, changed pt to pt-2
+          isOpen ? 'max-h-[32rem] opacity-100 pt-2' : 'max-h-0 opacity-0 pt-0' // Increased max-h from 96 to [32rem]
         }`}
         id="mobile-menu"
       >
@@ -184,7 +184,7 @@ export default function Navbar() {
                 className="text-gray-300 hover:text-[#5097C9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
                 onClick={() => setIsOpen(false)} // Close menu on click
               >
-                {link.label}
+                 {link.label}
               </Link>
             )
           ))}
@@ -192,7 +192,7 @@ export default function Navbar() {
           {/* --- NEW CLIENT RESOURCES LINK (MOBILE) --- */}
           <Link
             href="/client-resources"
-            className="text-gray-300 hover:text-[#5097C9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+            className="mt-2 inline-block rounded-md bg-[#5097C9] px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-[#0A2342] transition-colors duration-200"
             onClick={() => setIsOpen(false)} // Close menu on click
           >
             Client Resources
