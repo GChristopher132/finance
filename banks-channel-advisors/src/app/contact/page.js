@@ -4,8 +4,27 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Mail, Phone, MapPin, CalendarDays, Loader2 } from 'lucide-react';
-import { sendEmail } from './sendEmail'; // Import the new Server Action
+import { sendEmail } from './sendEmail'; // Import the Server Action
 
+// Reusable form input component
+const FormInput = ({ id, label, type, value, onChange, required }) => (
+  <div>
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    <input
+      type={type}
+      id={id}
+      name={id}
+      value={value}
+      onChange={onChange}
+      required={required}
+      className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5097C9] focus:border-transparent"
+    />
+  </div>
+);
+
+// The main page component
 export default function ContactPage() {
   // State for form fields
   const [fullName, setFullName] = useState('');
@@ -13,7 +32,6 @@ export default function ContactPage() {
   const [phone, setPhone] = useState('');
   const [howHear, setHowHear] = useState('');
   const [message, setMessage] = useState('');
-  // const [isVerified, setIsVerified] = useState(false); // Removed
   
   // State for form submission
   const [isLoading, setIsLoading] = useState(false);
@@ -25,52 +43,40 @@ export default function ContactPage() {
     setIsLoading(true);
     setFormStatus(null);
 
-    // Get form data
+    // Get form data directly from the event
     const formData = new FormData(e.currentTarget);
 
-    // Simple client-side validation (optional, but good for UX)
+    // Simple client-side validation
     if (!formData.get('fullName') || !formData.get('email') || !formData.get('message') || !formData.get('howHear')) {
       setFormStatus({ type: 'error', message: 'Please fill out all required fields.' });
       setIsLoading(false);
       return;
     }
 
-    // Call the Server Action
-    const result = await sendEmail(formData);
+    try {
+      // Call the Server Action
+      const result = await sendEmail(formData);
 
-    if (result.success) {
+      if (result.success) {
+        setIsLoading(false);
+        setFormStatus({ type: 'success', message: 'Thank you! Your message has been sent.' });
+        
+        // Reset form
+        setFullName('');
+        setEmail('');
+        setPhone('');
+        setHowHear('');
+        setMessage('');
+      } else {
+        setIsLoading(false);
+        setFormStatus({ type: 'error', message: result.error || 'An unknown error occurred.' });
+      }
+    } catch (error) {
+      console.error(error);
       setIsLoading(false);
-      setFormStatus({ type: 'success', message: 'Thank you! Your message has been sent.' });
-      
-      // Reset form
-      setFullName('');
-      setEmail('');
-      setPhone('');
-      setHowHear('');
-      setMessage('');
-    } else {
-      setIsLoading(false);
-      setFormStatus({ type: 'error', message: result.error || 'An unknown error occurred.' });
+      setFormStatus({ type: 'error', message: 'An error occurred. Please try again.' });
     }
   };
-
-  // Reusable form input component
-  const FormInput = ({ id, label, type, value, onChange, required }) => (
-    <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      <input
-        type={type}
-        id={id}
-        name={id}
-        value={value}
-        onChange={onChange}
-        required={required}
-        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5097C9] focus:border-transparent"
-      />
-    </div>
-  );
 
   return (
     <main className="flex flex-col bg-gray-50 text-[#0A437B]">
@@ -113,7 +119,9 @@ export default function ContactPage() {
                 If you would like to learn more about Banks Channel Advisors, have questions, or would like to schedule a complimentary call, please contact us today!
               </p>
               <Link
-                href="/client-resources"
+                href="https://calendly.com/your-scheduling-link"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center px-8 py-3 bg-[#5097C9] text-white font-semibold rounded-lg shadow-lg hover:bg-[#0A437B] transition duration-300 ease-in-out"
               >
                 <CalendarDays className="mr-2 h-5 w-5" />
@@ -260,10 +268,10 @@ export default function ContactPage() {
               </div>
             </form>
           </div>
+
         </div>
       </section>
     </main>
   );
 }
-
 

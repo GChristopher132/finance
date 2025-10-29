@@ -14,7 +14,7 @@ export async function sendEmail(formData) {
   const howHear = formData.get('howHear');
   const message = formData.get('message');
 
-  // Simple server-side validation
+  // --- 1. Simple server-side validation ---
   if (!fullName || !email || !howHear || !message) {
     return { success: false, error: 'Please fill out all required fields.' };
   }
@@ -114,13 +114,13 @@ export async function sendEmail(formData) {
     </html>
   `;
 
+  // --- 2. Try to send the email ---
   try {
-    // Send the email using Resend
     const { data, error } = await resend.emails.send({
-      from: 'Website Contact <website@bankschanneladvisors.com>', // Must be a verified domain in Resend
-      to: ['andrew@bankschanneladvisors.com'], // Your email address
+      from: 'Website Contact <website@bankschanneladvisors.com>', 
+      to: ['andrew@bankschanneladvisors.com'],
       subject: `New Contact Form Submission from ${String(fullName)}`,
-      reply_to: String(email), // Set the reply-to to the user's email
+      reply_to: String(email),
       html: htmlBody,
     });
 
