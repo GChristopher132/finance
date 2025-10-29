@@ -114,7 +114,7 @@ export default function Navbar() {
             {/* --- NEW CLIENT RESOURCES BUTTON --- */}
             <Link
               href="/client-resources"
-              className="ml-4 rounded-md bg-[#5097C9] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#0A437B] focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors duration-200"
+              className="ml-4 rounded-md bg-[#5097C9] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#0A437B] focus:outline-none focus:ring-2 focus:ring-[#5097C9] focus:ring-offset-2 transition-colors duration-200"
             >
               Client Resources
             </Link>

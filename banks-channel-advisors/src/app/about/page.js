@@ -25,10 +25,6 @@ export default function AboutPage() {
       title: "Professional Good Boy",
       imageSrc: "/images/cowboy2.png", // Replace with actual path in /public/images
       bio: "Cowboy brings [Y] years of expertise in retrieving ducks to the team. He is committed to building strong client relationships based on trust and clear communication. [Add more details.]",
-      email: "advisor.two@bankschanneladvisors.com", // Replace
-      phone: "555-123-4568", // Placeholder Phone
-      fax: "555-987-6543", // Placeholder Fax (assuming shared fax?)
-      // linkedin: "#" // Optional: Add LinkedIn profile URL
     }
   ];
 
@@ -123,10 +119,12 @@ export default function AboutPage() {
                 {/* Contact Info - Changed to flex-col */}
                 <div className="flex flex-col items-center md:items-start space-y-2 text-sm text-gray-600">
                    {/* Email */}
-                   <a href={`mailto:${advisor.email}`} className="inline-flex items-center hover:text-[#5097C9] transition-colors">
-                     <Mail className="h-4 w-4 mr-2" />
-                     {advisor.email}
-                   </a>
+                   {advisor.email && (
+                     <a href={`mailto:${advisor.email}`} className="inline-flex items-center hover:text-[#5097C9] transition-colors">
+                       <Mail className="h-4 w-4 mr-2" />
+                       {advisor.email}
+                     </a>
+                   )}
                    {/* Phone */}
                    {advisor.phone && (
                       <a href={`tel:${advisor.phone.replace(/-/g, '')}`} className="inline-flex items-center hover:text-[#5097C9] transition-colors">
@@ -141,10 +139,6 @@ export default function AboutPage() {
                         Fax: {advisor.fax}
                       </span>
                    )}
-                   {/* Add LinkedIn or other links similarly if needed */}
-                   {/* {advisor.linkedin && (
-                      <a href={advisor.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#5097C9] transition-colors"> LinkedIn </a>
-                   )} */}
                 </div>
               </div>
             </div>
