@@ -58,10 +58,16 @@ export default function AboutPage() {
              {/* Column 2: Text (Order second on mobile) */}
              <div className="order-2 md:order-1"> {/* Text on left on desktop */}
                  <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                     Banks Channel Advisors was founded on the principle that everyone deserves access to objective, expert financial advice tailored to their unique circumstances. We saw a need for a firm that prioritizes long-term relationships and genuine client success over product sales.
+                     BanksChannel Advisors, LLC was founded in 2012 as a registered investment advisor
+                      in the state of Virginia. We offer comprehensive financial planning and investment
+                      management.
                  </p>
                  <p className="text-lg text-gray-700 leading-relaxed">
-                     Located in Roanoke, VA, we are inspired by the resilience and natural beauty of the Roanoke Valley and the nearby Blue Ridge Mountains. Just as a channel guides vessels safely through changing waters, our name reflects steady navigation. We aim to guide our clients securely toward their financial destinations. [Expand on the firm's founding, mission, and connection to the name/location.]
+                     Our namesake, Banks Channel, is a protected waterway behind Topsail Island, NC. In
+                      days of old, sailing ships would shelter on Banks Channel during treacherous storms
+                      along the NC coast, aptly nicknamed &quot;The Graveyard of the Atlantic.&quot; Our mission is to
+                      help you and your family navigate troubled financial waters and reach your dreams and
+                      goals.
                  </p>
              </div>
          </div>
