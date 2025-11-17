@@ -15,16 +15,16 @@ export default function AboutPage() {
       title: "President",
       imageSrc: "/images/portrait.png", // Replace with actual path in /public/images
       bio: "With over [X] years of experience, Andrew founded Banks Channel Advisors with a vision to provide personalized, conflict-free financial guidance. [Add more details about experience, qualifications (CFP®, etc.), and passion for helping clients.]",
-      email: "andrew@bankschanneladvisors.com", // Replace
-      phone: "540-915-2991", // Placeholder Phone
-      fax: "703-636-0308", // Placeholder Fax
+      email: "andrew@bankschanneladvisors.com",
+      phone: "540-915-2991",
+      fax: "703-636-0308",
       // linkedin: "#" // Optional: Add LinkedIn profile URL
     },
     {
       name: "Cowboy",
-      title: "Professional Good Boy",
+      title: "Professional Duck Retriever",
       imageSrc: "/images/cowboy2.png", // Replace with actual path in /public/images
-      bio: "Cowboy brings [Y] years of expertise in retrieving ducks to the team. He is committed to building strong client relationships based on trust and clear communication. [Add more details.]",
+      bio: "Cowboy is the official mascot at Banks Channel Advisors. With a keen sense for sniffing out market trends (and treats), Cowboy ensures that we stay motivated and focused on delivering top-notch service to our clients.",
     }
   ];
 
@@ -48,7 +48,7 @@ export default function AboutPage() {
              {/* Column 1: Image (Order first on mobile) */}
              <div className="order-1 md:order-2"> {/* Image on right on desktop */}
                  <Image
-                     src="/images/avenham-ave.png" // Use the relevant boat image
+                     src="/images/BanksChannel.jpg" // Use the relevant boat image
                      alt="Sailboat navigating Banks Channel, symbolizing financial guidance"
                      width={600} // Adjust size as desired
                      height={400} // Adjust size as desired
