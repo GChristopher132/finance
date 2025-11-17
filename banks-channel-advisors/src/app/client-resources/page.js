@@ -99,7 +99,7 @@ export default function ClientResourcesPage() {
           {/* Charles Schwab */}
           <ResourceCard
             title="Charles Schwab"
-            description="(Login to the Charles Schwab website to view your Schwab accounts, download monthly statements, tax reports, trade confirmations, etc)"
+            description="Login to the Charles Schwab website to view your Schwab accounts, download monthly statements, tax reports, trade confirmations, etc."
             buttonText="Schwab Login"
             buttonHref="https://client.schwab.com/Areas/Access/Login"
             imageUrl="https://upload.wikimedia.org/wikipedia/commons/4/4b/Charles_Schwab_Corporation_logo.svg"
@@ -109,10 +109,10 @@ export default function ClientResourcesPage() {
           {/* eMoney */}
           <ResourceCard
             title="eMoney"
-            description="(Login to the eMoney portal to access your secure file sharing vault, view your net worth summary, cash flow report, port, investment allocations, tc)"
+            description="Login to the eMoney portal to access your secure file sharing vault, view your net worth summary, cash flow report, port, investment allocations, etc."
             buttonText="eMoney Login"
             buttonHref="https://wealth.emaplan.com/ema/ria/bankschanneladvisors"
-            imageUrl="https://emoneyadvisor.com/wp-content/uploads/2023/03/emoney-nav-logo.svg"
+            imageUrl="/images/emoney-nav-logo.svg"
             imageAlt="eMoney logo"
           />
         </div>
