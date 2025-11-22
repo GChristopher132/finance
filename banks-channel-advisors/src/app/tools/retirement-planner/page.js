@@ -133,17 +133,20 @@ export default function RetirementPlannerPage() {
   const fmtCurr = (num) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
   const fmtPct = (num) => (num * 100).toFixed(2) + '%';
 
-  // --- PDF Export (Table + All Charts) ---
+  // --- PDF Export (Strict Visual Match) ---
   const exportToPDF = async () => {
     const doc = new jsPDF();
+    
+    // Title & Header
     doc.setFontSize(16);
-    doc.setTextColor(10, 67, 123);
+    doc.setTextColor(10, 67, 123); // Brand Blue
     doc.text(householdName, 14, 15); 
 
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
     doc.text(`Assumptions: Savings Increase ${val('annualSavingsIncrease')}% | Inflation ${val('inflationRate')}%`, 14, 22);
 
+    // Headers
     const p1Header = inputs.firstName1 || "Age 1";
     const p2Header = inputs.firstName2 ? (inputs.firstName2 || "Age 2") : null;
 
@@ -151,82 +154,102 @@ export default function RetirementPlannerPage() {
       { header: "Year", dataKey: "year" },
       { header: p1Header, dataKey: "age1" },
       ...(p2Header ? [{ header: p2Header, dataKey: "age2" }] : []),
+      { header: "Beg. Value", dataKey: "beg" },
       { header: "Savings", dataKey: "sav" },
+      { header: "Growth", dataKey: "rate" },
+      { header: "Ret. Cost", dataKey: "cost" },
       { header: "End Value", dataKey: "end" },
-      { header: "Passive Inc", dataKey: "pass" },
-      { header: "Withdrawal", dataKey: "cost" },
-      { header: "Rate", dataKey: "wrate" }
+      { header: "Expenses", dataKey: "col" }
     ];
 
     const body = projectionData.map(row => ({
       year: row.year,
       age1: row.age1,
       age2: row.age2,
+      beg: fmtCurr(row.beginningBalance),
       sav: row.annualSavings > 0 ? fmtCurr(row.annualSavings) : "-",
-      end: fmtCurr(row.endBalance),
-      pass: fmtCurr(row.passiveIncome),
+      rate: fmtPct(row.growthRate),
       cost: row.retirementCost > 0 ? `(${fmtCurr(row.retirementCost)})` : "-",
-      wrate: row.isRetired ? fmtPct(row.withdrawalRate) : "-",
+      end: fmtCurr(row.endBalance),
+      col: fmtCurr(row.costOfLiving),
       raw: row 
     }));
 
-    // 1. Generate the Table
+    // 1. Generate Table
     autoTable(doc, {
-      columns, body, startY: 30,
+      columns, 
+      body, 
+      startY: 30,
       styles: { fontSize: 8, cellPadding: 2, halign: 'right' },
-      columnStyles: { year: { halign: 'left' }, age1: { halign: 'left' }, age2: { halign: 'left' } },
+      columnStyles: { 
+        year: { halign: 'left' }, 
+        age1: { halign: 'left' }, 
+        age2: { halign: 'left' } 
+      },
       headStyles: { fillColor: [10, 67, 123], halign: 'right' },
+      
+      // Visual Logic (Colors)
       didParseCell: (data) => {
         if (data.section === 'body') {
           const row = data.row.raw.raw;
-          if (row.age1 === val('retirementAge')) data.cell.styles.fillColor = [255, 249, 196];
-          if (data.column.dataKey === 'end') data.cell.styles.fontStyle = 'bold';
-          if (data.column.dataKey === 'wrate' && row.withdrawalRate > 0.05) data.cell.styles.textColor = [220, 38, 38];
+          
+          // Yellow Background for Retirement Year
+          if (row.age1 === val('retirementAge')) {
+            data.cell.styles.fillColor = [255, 249, 196]; // Yellow-100
+          }
+
+          // Text Colors
+          if (data.column.dataKey === 'sav' && row.annualSavings > 0) {
+            data.cell.styles.textColor = [22, 163, 74]; // Green-600
+          }
+          if (data.column.dataKey === 'cost' && row.retirementCost > 0) {
+            data.cell.styles.textColor = [220, 38, 38]; // Red-600
+          }
+          if (data.column.dataKey === 'end') {
+            data.cell.styles.textColor = [10, 67, 123]; // Brand Blue
+            data.cell.styles.fontStyle = 'bold';
+          }
+          if (data.column.dataKey === 'col') {
+            data.cell.styles.textColor = [107, 114, 128]; // Gray-500
+          }
         }
       }
     });
 
-    // 2. Capture and Append Charts
-    // We grab the hidden container that has all 4 charts rendered
+    // 2. Append Charts at Bottom
     const chartIDs = ['pdf-chart-netWorth', 'pdf-chart-compounding', 'pdf-chart-cashFlow', 'pdf-chart-withdrawal'];
     const chartTitles = ['Net Worth Projection', 'Principal vs Growth', 'Income vs Expenses', 'Withdrawal Rate Risk'];
     
-    let currentY = doc.lastAutoTable.finalY + 10; // Start after table
+    let currentY = doc.lastAutoTable.finalY + 10; 
     const pageHeight = doc.internal.pageSize.height;
 
     for (let i = 0; i < chartIDs.length; i++) {
         const element = document.getElementById(chartIDs[i]);
         if (!element) continue;
 
-        // Convert DOM element to Canvas
-        const canvas = await html2canvas(element, { scale: 2 }); // Scale 2 for better quality
+        const canvas = await html2canvas(element, { scale: 2 });
         const imgData = canvas.toDataURL('image/png');
-
-        // Dimensions for PDF
-        const imgWidth = 180; // Fits within A4 margins
+        const imgWidth = 180;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        // Check if we need a new page
         if (currentY + imgHeight + 10 > pageHeight) {
             doc.addPage();
             currentY = 20;
         }
 
-        // Add Title
         doc.setFontSize(12);
         doc.setTextColor(10, 67, 123);
         doc.text(chartTitles[i], 14, currentY);
         currentY += 5;
 
-        // Add Image
         doc.addImage(imgData, 'PNG', 15, currentY, imgWidth, imgHeight);
-        currentY += imgHeight + 15; // Spacing for next chart
+        currentY += imgHeight + 15;
     }
 
     doc.save(`${householdName.replace(/\s+/g, '_')}_Report.pdf`);
   };
 
-  // --- Excel Export ---
+  // --- Excel Export (Strict Visual Match) ---
   const exportToExcel = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Projection');
@@ -237,17 +260,18 @@ export default function RetirementPlannerPage() {
       ...(inputs.firstName2 ? [{ header: inputs.firstName2, key: 'age2', width: 8 }] : []),
       { header: 'Beginning Value', key: 'beg', width: 18 },
       { header: 'Annual Savings', key: 'sav', width: 18 },
-      { header: 'Inv. Returns', key: 'ret', width: 18 },
-      { header: 'Passive Income', key: 'pass', width: 18 },
-      { header: 'Retirement Cost', key: 'cost', width: 20 },
-      { header: 'Withdrawal Rate', key: 'wrate', width: 15 },
-      { header: 'End Value', key: 'end', width: 20 },
+      { header: 'Growth Rate', key: 'rate', width: 12 }, // Added to match PDF format
+      { header: 'Annual Ret. Cost', key: 'cost', width: 20 },
+      { header: 'End of Year Value', key: 'end', width: 20 },
+      { header: 'Cost of Living', key: 'col', width: 20 },
     ];
 
+    // Title Row
     worksheet.insertRow(1, [householdName]);
-    worksheet.mergeCells(1, 1, 1, inputs.firstName2 ? 10 : 9);
+    worksheet.mergeCells(1, 1, 1, inputs.firstName2 ? 9 : 8);
     worksheet.getRow(1).font = { size: 16, bold: true, color: { argb: 'FF0A437B' } };
     
+    // Header Row
     const headerRow = worksheet.getRow(2);
     headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
     headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0A437B' } };
@@ -259,25 +283,35 @@ export default function RetirementPlannerPage() {
         age2: inputs.firstName2 ? row.age2 : null,
         beg: row.beginningBalance,
         sav: row.annualSavings,
-        ret: row.investmentReturns,
-        pass: row.passiveIncome,
+        rate: row.growthRate,
         cost: row.retirementCost > 0 ? -row.retirementCost : 0,
-        wrate: row.isRetired ? row.withdrawalRate : null,
-        end: row.endBalance
+        end: row.endBalance,
+        col: row.costOfLiving
       });
 
+      // Retirement Year Highlight
       if (row.age1 === val('retirementAge')) {
-        newRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF9C4' } };
+        newRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF9C4' } }; // Light Yellow
+        newRow.border = { top: { style: 'medium', color: { argb: 'FFEAB308' } }, bottom: { style: 'medium', color: { argb: 'FFEAB308' } } };
       }
 
-      ['beg', 'sav', 'ret', 'pass', 'cost', 'end'].forEach(k => newRow.getCell(k).numFmt = '"$"#,##0');
-      newRow.getCell('wrate').numFmt = '0.00%';
-      if (row.withdrawalRate > 0.05) newRow.getCell('wrate').font = { color: { argb: 'FFDC2626' }, bold: true };
+      // Formats
+      ['beg', 'sav', 'cost', 'end', 'col'].forEach(k => newRow.getCell(k).numFmt = '"$"#,##0');
+      newRow.getCell('rate').numFmt = '0.00%';
+      
+      // Negative/Cost Red Formatting (Parentheses handled by custom format string in real excel if needed, but color is key)
+      newRow.getCell('cost').numFmt = '"($"#,##0)'; 
+
+      // Text Colors
+      if (row.annualSavings > 0) newRow.getCell('sav').font = { color: { argb: 'FF16A34A' } }; // Green
+      if (row.retirementCost > 0) newRow.getCell('cost').font = { color: { argb: 'FFDC2626' } }; // Red
+      newRow.getCell('end').font = { color: { argb: 'FF0A437B' }, bold: true }; // Blue
+      newRow.getCell('col').font = { color: { argb: 'FF6B7280' } }; // Gray
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, `${householdName.replace(/\s+/g, '_')}_Full_Data.xlsx`);
+    saveAs(blob, `${householdName.replace(/\s+/g, '_')}_Projection.xlsx`);
   };
 
   return (
@@ -294,7 +328,6 @@ export default function RetirementPlannerPage() {
           <h2 className="text-xl font-semibold text-[#0A2342] mb-4 flex items-center">
             <Settings className="w-5 h-5 mr-2" /> Inputs
           </h2>
-          
           <div className="space-y-4">
             {/* People */}
             <div className="bg-gray-50 p-3 rounded border border-gray-100">
@@ -348,7 +381,7 @@ export default function RetirementPlannerPage() {
             </div>
           </div>
 
-          {/* --- CHART SECTION (Interactive) --- */}
+          {/* --- CHART SECTION --- */}
           <div className={activeTab === 'chart' ? 'block' : 'hidden'}>
             <div className="mb-6">
               <div className="relative inline-block w-full sm:w-64">
@@ -418,8 +451,8 @@ export default function RetirementPlannerPage() {
                      <YAxis tickFormatter={(val) => `$${val / 1000}k`} />
                      <Tooltip formatter={(val) => fmtCurr(val)} labelFormatter={(label) => `Age ${label}`} />
                      <Legend />
-                     <Line type="monotone" dataKey="passiveIncome" stroke="#10B981" strokeWidth={3} name="Passive Income (Growth)" dot={false} />
-                     <Line type="monotone" dataKey="costOfLiving" stroke="#EF4444" strokeWidth={3} name="Annual Expenses" dot={false} />
+                     <Line type="monotone" dataKey="passiveIncome" stroke="#10B981" strokeWidth={3} name="Passive Income" dot={false} />
+                     <Line type="monotone" dataKey="costOfLiving" stroke="#EF4444" strokeWidth={3} name="Expenses" dot={false} />
                      <ReferenceLine x={val('retirementAge')} stroke="gray" strokeDasharray="3 3" label="Retire" />
                    </LineChart>
                  </ResponsiveContainer>
@@ -484,7 +517,6 @@ export default function RetirementPlannerPage() {
       </div>
 
       {/* --- HIDDEN OFF-SCREEN AREA FOR PDF CAPTURE --- */}
-      {/* We render all 4 charts here with fixed dimensions so html2canvas can grab them. */}
       <div 
         style={{ 
             position: 'fixed', 
@@ -492,7 +524,7 @@ export default function RetirementPlannerPage() {
             top: 0, 
             width: '800px', 
             height: 'auto',
-            visibility: 'visible' // must be visible to html2canvas, just offscreen
+            visibility: 'visible'
         }}
       >
         <div id="pdf-chart-netWorth" className="p-4 bg-white">
